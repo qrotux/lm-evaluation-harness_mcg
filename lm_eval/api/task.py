@@ -1534,7 +1534,7 @@ class ConfigurableTask(Task):
                 # If you set doc_to_choice,
                 # it assumes that doc_to_target returns a number.
                 choices = self.doc_to_choice(doc)
-                gold = choices[gold]
+                # gold = choices[gold]
                 if self.multiple_choice_generate == "abcd":
                     try:
                         result_label = re.findall(r"ANSWER: ([A-Z])", result)[-1]
