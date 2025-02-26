@@ -357,16 +357,18 @@ class TemplateAPI(TemplateLM):
         # !!! Copy: shared dict for each request, need new object !!!
         gen_kwargs = copy.deepcopy(gen_kwargs)
         try:
+            json_payload = self._create_payload(
+                self.create_message(messages),
+                generate=generate,
+                gen_kwargs=gen_kwargs,
+                seed=self._seed,
+                eos=self.eos_string,
+                **kwargs,
+            )
+            json_payload.pop("seed", None)
             response = requests.post(
                 self.base_url,
-                json=self._create_payload(
-                    self.create_message(messages),
-                    generate=generate,
-                    gen_kwargs=gen_kwargs,
-                    seed=self._seed,
-                    eos=self.eos_string,
-                    **kwargs,
-                ),
+                json=json_payload,
                 headers=self.header,
                 verify=self.verify_certificate,
             )
@@ -402,6 +404,7 @@ class TemplateAPI(TemplateLM):
             seed=self._seed,
             **kwargs,
         )
+        payload.pop("seed", None)
         cache_method = "generate_until" if generate else "loglikelihood"
         try:
             async with session.post(
