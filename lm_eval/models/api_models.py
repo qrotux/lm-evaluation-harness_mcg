@@ -441,6 +441,11 @@ class TemplateAPI(TemplateLM):
                 "API request failed after multiple retries. Please check the API status."
             )
             return None
+        except asyncio.TimeoutError:
+            eval_logger.error(
+                "API request timeout after multiple retries."
+            )
+            return None
 
     def batch_loglikelihood_requests(
         self, chunks: Iterable[List[LogLikelihoodInputs]]
